@@ -1,0 +1,58 @@
+
+
+
+name: Automation workflow
+
+on:
+   workflow_dispatch:
+   push:
+    branches:
+      - main
+    paths:
+      - '**.tf'
+      - '.github/workflows/terraform.yml'
+  
+
+jobs:
+  terraform:
+    runs-on: self-hosted # Runs on your self-hosted runner instead of GitHub-hosted ones
+   
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install unzip
+        run: sudo apt-get update && sudo apt-get install -y unzip
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.My_Access_Key }}
+          aws-secret-access-key: ${{ secrets.My_secret_Key}}
+          aws-region: us-east-2  # Change to your region
+          audience: sts.amazonaws.com
+    
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Initialize Terraform
+        run: terraform init
+      
+
+      - name: Validate Terraform
+        run: terraform validate
+     
+  
+ 
+     
+      - name: Plan Terraform
+        run: terraform plan -out=tfplan
+
+      - name: Apply Terraform
+        if: github.event_name == 'push'
+        run: terraform apply -auto-approve tfplan
+     
