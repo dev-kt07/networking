@@ -61,6 +61,7 @@ module "security_group" {
   }
   ]
 
+
   egress_rules = [
     {
       from_port   = 0
@@ -70,3 +71,16 @@ module "security_group" {
     }
   ]
 }
+
+
+module "asg" {
+  source            = "./modules/asg"
+  name              = "my-asg"
+  ami_id            = "ami-0f20bc7a567cdb626"
+  instance_type     = "t2.micro"
+  desired_capacity  = 2
+  max_size          = 2
+  min_size          = 1
+  subnet_ids        = ["subnet-042bffecfb9a85ac9", "subnet-0c43c696d0a32cd99"]
+}
+
