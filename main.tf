@@ -20,3 +20,17 @@ module "db_subnet_group" {
   subnet_ids = ["subnet-042bffecfb9a85ac9", "subnet-0c43c696d0a32cd99"]
   
 }
+
+module "eks" {
+  source = "./terraform-modules/eks"
+
+  cluster_name       = "dev-eks-cluster"
+  subnet_ids         = module.vpc.subnet_ids
+  kubernetes_version = "1.29"
+
+  desired_size   = 2
+  min_size       = 1
+  max_size       = 2
+  instance_types = ["t2.medium"]
+}
+
