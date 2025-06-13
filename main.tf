@@ -25,7 +25,7 @@ module "eks" {
   source = "./modules/eks"
 
   cluster_name       = "dev-eks-cluster"
-  subnet_ids         = module.vpc.subnet_ids
+  subnet_ids         = module.vpc.private_subnets
   kubernetes_version = "1.29"
 
   desired_size   = 2
