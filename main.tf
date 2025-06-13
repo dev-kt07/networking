@@ -34,3 +34,39 @@ module "eks" {
   instance_types = ["t2.medium"]
 }
 
+module "security_group" {
+  source      = "./modules/security_group"
+  name        = "my-custom-sg"
+  description = "Security group for my app"
+  vpc_id      =	"vpc-0af2e27359957c8f0"
+
+  ingress_rules = [
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+    {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # HTTPS from anywhere
+  }
+  ]
+
+  egress_rules = [
+    {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}
