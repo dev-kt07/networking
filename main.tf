@@ -22,7 +22,7 @@ module "db_subnet_group" {
 }
 
 module "eks" {
-  source = "./terraform-modules/eks"
+  source = "./modules/eks"
 
   cluster_name       = "dev-eks-cluster"
   subnet_ids         = module.vpc.subnet_ids
